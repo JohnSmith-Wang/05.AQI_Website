@@ -1,19 +1,20 @@
 <template>
-  <div>
-    <div>
+  <div class="container-fluid">
+    <div class="sel-Area">
         <Selector :countyMenu="county" @selTarget="toFilter"></Selector>
     </div>
 
-    <div class="container justify-content-center">
-      <div class="card-columns">
+    <div class="fav-Area">
+      <h3>追蹤的監測站</h3>
+      <div class="card-menu card-columns">
         <Aqicard v-for="item in favCountyList" :key="item.SiteName"  :county="item"  :isActive="true" @favstar="tagCountyHandler"></Aqicard>
       </div>
     </div>
 
 <hr>
 
-    <div class="container justify-content-center">
-      <div class="card-columns">
+    <div class="menu-Area">
+      <div class="card-menu card-columns">
         <Aqicard v-for="item in aqiCardList" :key="item.SiteName" :county="item" :isActive="false" @favstar="tagCountyHandler"></Aqicard>
       </div>
     </div>
@@ -40,30 +41,29 @@ export default {
     },
     methods:{
         getdata(){
-          const vm = this;
+          /*const api = 'https://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';*/
           const api = 'http://opendata2.epa.gov.tw/AQI.json';
-          vm.$http.get(api).then((response) => {
-            vm.aqidata = response.data;
+          this.$http.get(api).then((response) => {
+            this.aqidata = response.data;
             response.data.forEach(item => {
-                if(vm.county.indexOf(item.County) === -1){
-                  vm.county.push(item.County);
+                if(this.county.indexOf(item.County) === -1){
+                  this.county.push(item.County);
                 }
             });
           })
         },
-        toFilter(getdata){
-          this.filter = getdata
+        toFilter(data){
+          this.filter = data;
         },
-        tagCountyHandler(getdata){
-          let vm = this;
-          let index = vm.tagCounty.findIndex( item => item === getdata.SiteName);
-          if(vm.tagCounty.indexOf(getdata.SiteName) === -1){
-            vm.tagCounty.push(getdata.SiteName);
-            vm.$store.commit('ADD_LIST',getdata.SiteName);
+        tagCountyHandler(data){
+          let index = this.tagCounty.findIndex( item => item === data.SiteName);
+          if(this.tagCounty.indexOf(data.SiteName) === -1){
+            this.tagCounty.push(data.SiteName);
+            this.$store.commit('ADD_LIST',data.SiteName);
           }
           else{
-            vm.tagCounty.splice(index,1);
-            vm.$store.commit('DEL_LIST',index);
+            this.tagCounty.splice(index,1);
+            this.$store.commit('DEL_LIST',index);
           }
         },
         InsertTagCounty(){
@@ -74,25 +74,23 @@ export default {
     },
     computed:{
       aqiCardList(){
-        let vm = this;
         if(this.filter === ""){
-          return vm.aqidata.filter(function(item){
-            return vm.tagCounty.indexOf(item.SiteName) === -1
-          })
+          return this.aqidata.filter((item) => {
+            return this.tagCounty.indexOf(item.SiteName) === -1
+            }
+          )
         }
         else{
-          return vm.aqidata.filter(function(item){
-            if(item.County === vm.filter){
-              return vm.tagCounty.indexOf(item.SiteName) === -1
-            }
+          return this.aqidata.filter((item) =>{
+              if(item.County === this.filter){
+                return this.tagCounty.indexOf(item.SiteName) === -1
+              }
           })
         }
       },
       favCountyList(){
-        let vm = this;
-
-        return vm.aqidata.filter(function(item){
-          return vm.tagCounty.indexOf(item.SiteName) > -1
+        return this.aqidata.filter((item) =>{
+          return this.tagCounty.indexOf(item.SiteName) > -1;
         })
       },
     },
@@ -103,3 +101,42 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.sel-Area{
+  max-width: 600px;
+  margin: 0px auto;
+  padding: 20px;
+}
+
+.fav-Area{
+  background-color: white;
+  max-width:1100px;
+  margin: 20px auto;;
+  border-radius: 5px;
+  box-shadow: 10px 5px 5px  rgb(160, 159, 159);
+  h3{
+    padding: 20px 10px 0px;
+  }
+}
+
+.menu-Area{
+  background-color: white;
+  max-width: 1100px;
+  margin: 20px auto;
+  border-radius: 5px;
+  box-shadow: 10px 5px 5px  rgb(160, 159, 159);
+}
+
+.card-menu{
+  max-width: 900px;
+  margin: 0px auto;
+  padding: 10px 20px;
+}
+
+hr{
+  height: 1px;
+  background-color: rgb(145, 145, 145);
+  width: 90%;
+}
+</style>>

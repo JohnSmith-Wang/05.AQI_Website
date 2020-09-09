@@ -1,10 +1,9 @@
 <template>
-  <div>
 
-    <div class="card mb-3" style="max-width: 18rem;" :class="testColor">
+    <div class="card custom-card" :class="testColor">
       <div class="card-header">
         {{county.County}}-{{county.SiteName}}
-        <a href="#" class="float-right" @click="starHandler">
+        <a href="#" class="float-right" @click.prevent="starHandler">
           <i class="fa-star" :class="{fas:starActive,far:!starActive}"></i>
         </a>
       </div>
@@ -18,7 +17,6 @@
       </div>
     </div>
 
-  </div>
 </template>
 
 <script>
@@ -93,6 +91,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.custom-card{
+  max-width: 18rem;
+  margin: 10px auto;
+  box-shadow: 7px 5px 5px  rgb(160, 159, 159);
+}
+
 li {
   color: rgb(28, 91, 185);
 }

@@ -1,23 +1,18 @@
 <template>
-  <div class="container">
 
-
-
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <h4 style="text-align:center" class="mb-4">AQI 空氣品質監測查詢網</h4>
-          <div class="mb-4">
-            <div class="input-group">
-              <select class="form-control form-control-sm" v-model="target">
-                <option value="">--- 請選擇城市 ---</option>
-                <option :value="item" v-for="(item,index) in countyMenu" :key="index">{{item}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
+    <div class="col-12">
+      <div class="col-12 AQI-title">
+        <h4>AQI</h4>
+        <h4>空氣品質監測查詢網</h4>
       </div>
-
-  </div>
+      <div class="col-12 County-selector">
+        <select class="form-control form-control-md" v-model="target">
+          <option value="">--- 請選擇城市 ---</option>
+          <option :value="item" v-for="(item,index) in countyMenu" :key="index">{{item}}</option>
+        </select>
+      </div>
+    </div>
+      
 </template>
 
 <script>
@@ -42,16 +37,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  max-width: 960px;
+.AQI-title{
+  margin: 20px auto;
+  h4{
+    text-align: center;
+  }
 }
 
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
-.border-top-gray { border-top-color: #adb5bd; }
-
-.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
-
-.lh-condensed { line-height: 1.25; }
+.County-selector{
+  margin: 20px auto;
+}
 
 </style>
